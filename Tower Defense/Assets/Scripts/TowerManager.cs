@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Tower;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,8 +16,11 @@ public class TowerManager : Singleton<TowerManager>
         {
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
-            if(hit.collider.tag == "BuildSites") { 
-            PlaceTower(hit);
+            if(hit.collider.CompareTag("BuildSites"))
+            {
+
+                hit.collider.tag = "BuildSiteFull";
+                PlaceTower(hit);
                 }
         }
 	}
@@ -37,6 +38,7 @@ public class TowerManager : Singleton<TowerManager>
     public void SelectedTower(TowerBtn towerSelected)
     {
         _towerPressed = towerSelected;
+        print(_towerPressed);
     }
 
 }
