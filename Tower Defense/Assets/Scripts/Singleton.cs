@@ -12,7 +12,7 @@ public class Singleton <T> :MonoBehaviour where T : MonoBehaviour
             {
                 _instance = FindObjectOfType<T>();
             }
-            else if (_instance != FindObjectOfType<T>()) ;
+            else if (_instance != FindObjectOfType<T>()) 
             {
                 Destroy(FindObjectOfType<T>());
             }

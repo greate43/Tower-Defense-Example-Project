@@ -11,9 +11,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private int _totalEnemies;
     [SerializeField] private int _enemiesPerSpawn;
 
-                     private int _enemiesOnTheScreen =0;
+                     private int _enemiesOnTheScreen;
 
-               const float _spawnDelay =0.5f;
+               const float SpawnDelay =0.5f;
 
    
     void Start()
@@ -45,8 +45,8 @@ public class GameManager : Singleton<GameManager>
             print(_enemiesOnTheScreen);
         }
     }
-    
-    IEnumerator Spawn()
+
+    private IEnumerator Spawn()
     {
         if (_enemiesPerSpawn > 0 && _enemiesOnTheScreen < _totalEnemies)
         {
@@ -61,7 +61,7 @@ public class GameManager : Singleton<GameManager>
             }
         }
          
-         yield return new WaitForSeconds(_spawnDelay);
+         yield return new WaitForSeconds(SpawnDelay);
 
         StartCoroutine(Spawn());
     }

@@ -35,13 +35,13 @@ public class Enemy : MonoBehaviour {
 
      void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag=="CheckPoint")
+        if (other.CompareTag("CheckPoint"))
         {
             _target += 1;
          
-        } else if (other.tag=="Finish")
+        } else if (other.CompareTag("Finish"))
         {
-          //  GameManager.Instance.RemoveEnemyFromScreen();
+           GameManager.Instance.RemoveEnemyFromScreen();
             Destroy(gameObject);
         }
     }
