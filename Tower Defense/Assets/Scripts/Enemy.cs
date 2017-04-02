@@ -11,7 +11,8 @@ public class Enemy : MonoBehaviour {
     // Use this for initialization
     void Start () {
         _enemy = GetComponent<Transform>();
-	}
+        GameManager.Instance.RegisterEnemy(this);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -41,8 +42,8 @@ public class Enemy : MonoBehaviour {
          
         } else if (other.CompareTag("Finish"))
         {
-           GameManager.Instance.RemoveEnemyFromScreen();
-            Destroy(gameObject);
+           GameManager.Instance.UnRegisterEnemy(this);
+           
         }
     }
 }

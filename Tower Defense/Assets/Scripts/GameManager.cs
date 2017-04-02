@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -11,52 +12,31 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private int _totalEnemies;
     [SerializeField] private int _enemiesPerSpawn;
 
-                     private int _enemiesOnTheScreen;
+               
 
                const float SpawnDelay =0.5f;
 
+   public List<Enemy> EnemiesList=new List<Enemy>();
    
     void Start()
     {
         StartCoroutine(Spawn());
     }
 
-    void SpawnEnemy()
-    {
-        if (_enemiesPerSpawn > 0 && _enemiesOnTheScreen < _totalEnemies)
-        {
-            for (int i = 0; i < _enemiesPerSpawn; i++)
-            {
-                if (_enemiesOnTheScreen < _maxEnemiesOnTheScreen)
-                {
-                    GameObject newEnemy = Instantiate(_enemies[0]);
-                    newEnemy.transform.position = _spawnPoint.transform.position;
-                    _enemiesOnTheScreen += 1;
-                }
-            }
-        }
-    }
+    
 
-    public void RemoveEnemyFromScreen()
-    {
-        if (_enemiesOnTheScreen > 0)
-        {
-            _enemiesOnTheScreen -= 1;
-            print(_enemiesOnTheScreen);
-        }
-    }
 
     private IEnumerator Spawn()
     {
-        if (_enemiesPerSpawn > 0 && _enemiesOnTheScreen < _totalEnemies)
+        if (_enemiesPerSpawn > 0 && EnemiesList.Count < _totalEnemies)
         {
             for (int i = 0; i < _enemiesPerSpawn; i++)
             {
-                if (_enemiesOnTheScreen < _maxEnemiesOnTheScreen)
+                if (EnemiesList.Count < _maxEnemiesOnTheScreen)
                 {
                     GameObject newEnemy = Instantiate(_enemies[1]);
                     newEnemy.transform.position = _spawnPoint.transform.position;
-                    _enemiesOnTheScreen += 1;
+               
                 }
             }
         }
@@ -66,6 +46,24 @@ public class GameManager : Singleton<GameManager>
         StartCoroutine(Spawn());
     }
 
+    public void RegisterEnemy(Enemy enemy)
+    {
+        EnemiesList.Add(enemy);
 
-   
+    }
+    public void UnRegisterEnemy(Enemy enemy)
+    {
+        EnemiesList.Remove(enemy);
+        Destroy(enemy.gameObject);
+    }
+
+    public void DestoryAllEnemy()
+    {
+        foreach (Enemy enemy in EnemiesList)
+        {
+           Destroy(enemy.gameObject);
+        }
+        EnemiesList.Clear();
+    }
+
 }
