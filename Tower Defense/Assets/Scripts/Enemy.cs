@@ -45,5 +45,10 @@ public class Enemy : MonoBehaviour {
            GameManager.Instance.UnRegisterEnemy(this);
            
         }
+        else if (other.CompareTag("Projectiles"))
+        {
+           Destroy(other.gameObject);
+        }
+     
     }
 }
