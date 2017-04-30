@@ -8,6 +8,7 @@ namespace Tower
 
         [SerializeField] private GameObject _towerObject;
         [SerializeField] private Sprite _dragSprite;
+        [SerializeField] private int _towerPrice;
 
         private void Awake()
         {
@@ -26,6 +27,12 @@ namespace Tower
             {
                 return _towerObject;
             }
-        } 
+        }
+
+        public int TowerPrice
+        {
+            get { return _towerPrice; }
+        }
+
     }
 }

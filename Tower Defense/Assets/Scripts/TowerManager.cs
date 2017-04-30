@@ -4,7 +4,8 @@ using UnityEngine.EventSystems;
 
 public class TowerManager : Singleton<TowerManager>
 {
-    private TowerBtn _towerPressed;
+    public TowerBtn TowerPressed { get; set; }
+   
     private SpriteRenderer _spriteRenderer;
     // Use this for initialization
     void Start()
@@ -54,9 +55,9 @@ public class TowerManager : Singleton<TowerManager>
     }
     private void PlaceTower(RaycastHit2D hit)
     {
-        if (!EventSystem.current.IsPointerOverGameObject() && _towerPressed != null)
+        if (!EventSystem.current.IsPointerOverGameObject() && TowerPressed != null)
         {
-            GameObject newTower = Instantiate(_towerPressed.TowerObject);
+            GameObject newTower = Instantiate(TowerPressed.TowerObject);
             newTower.transform.position = hit.transform.position;
             DisableDragSprite();
         }
@@ -64,7 +65,7 @@ public class TowerManager : Singleton<TowerManager>
 
     public void SelectedTower(TowerBtn towerSelected)
     {
-        _towerPressed = towerSelected;
-         EnableDragSprite(_towerPressed.DragSprite);
+        TowerPressed = towerSelected;
+         EnableDragSprite(TowerPressed.DragSprite);
     }
 }

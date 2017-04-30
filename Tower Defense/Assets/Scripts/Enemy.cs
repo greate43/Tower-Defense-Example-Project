@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform[] _wayPoint;
     [SerializeField] private float _navigationUpdate;
     [SerializeField] private int _healthPoints = 100;
-
+    [SerializeField] private int _rewardAmount;
     private Transform _enemy;
     public bool IsDead { get; private set; }
     private float _navigationTime = 0;
