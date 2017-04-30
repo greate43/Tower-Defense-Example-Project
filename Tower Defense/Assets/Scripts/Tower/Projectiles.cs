@@ -2,25 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ProType
+namespace Tower
 {
-    Rock,
-    Arrow,
-    Fireball
-}
-public class Projectiles : MonoBehaviour
-{
-
-    [SerializeField] private int _attackStrenght;
-   [SerializeField] private ProType _projectileType;
-
-    public int AttackStrenght
+    public enum ProType
     {
-        get { return _attackStrenght; }
+        Rock,
+        Arrow,
+        Fireball
     }
-    public ProType ProjectileType
+    public class Projectiles : MonoBehaviour
     {
-        get { return _projectileType; }
-    }
 
+        [SerializeField] private int _attackStrenght;
+        [SerializeField] private ProType _projectileType;
+
+        public int AttackStrenght
+        {
+            get { return _attackStrenght; }
+        }
+        public ProType ProjectileType
+        {
+            get { return _projectileType; }
+        }
+
+    }
 }

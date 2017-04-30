@@ -22,7 +22,7 @@ namespace Tower
         public virtual void Update()
         {
             _attackCounter -= Time.deltaTime;
-            if (_targetEnemy == null)
+            if (_targetEnemy == null ||_targetEnemy.IsDead)
             {
                 Enemy nearestEnemy = GetNearestEnemyInRange();
                 if (nearestEnemy != null && Vector2.Distance(transform.position, nearestEnemy.transform.position) <=
