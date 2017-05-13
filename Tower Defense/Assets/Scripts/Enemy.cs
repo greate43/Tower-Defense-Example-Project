@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("CheckPoint"))
         {
@@ -53,6 +53,9 @@ public class Enemy : MonoBehaviour
         }
         else if (other.CompareTag("Finish"))
         {
+            GameManager.Instance.TotalEscaped += 1;
+            GameManager.Instance.RoundEscaped += 1;
+            GameManager.Instance.IsWaveOver();
             GameManager.Instance.UnRegisterEnemy(this);
         }
         else if (other.CompareTag("Projectiles"))
@@ -83,7 +86,10 @@ public class Enemy : MonoBehaviour
     public void Die()
     {
         IsDead = true;
+        GameManager.Instance.TotalKilled +=1;
         _enemyCollider2D.enabled = false;
- 
+        GameManager.Instance.AddMoney(_rewardAmount);
+        GameManager.Instance.IsWaveOver();
+
     }
 }

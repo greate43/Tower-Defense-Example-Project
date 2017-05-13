@@ -5,8 +5,13 @@ using UnityEngine.UI;
 
 public enum GameStatus
 {
-    Next,Play,GameOver,Win
+    Next,
+    Play,
+    GameOver,
+    Win,
+    GameStarted
 }
+
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private int _totalWave = 10;
@@ -18,23 +23,36 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private GameObject _spawnPoint;
     [SerializeField] private GameObject[] _enemies;
-    [SerializeField] private int _maxEnemiesOnTheScreen;
-    [SerializeField] private int _totalEnemies;
+
+    [SerializeField] private int _totalEnemies = 3;
     [SerializeField] private int _enemiesPerSpawn;
 
     private int _waveNumber = 0;
     private int _totalMoney = 10;
-    
+
     private int _totalEscaped = 0;
     private int _roundEscaped = 0;
     private int _totalKilled = 0;
     private int _whichEnemyToSpawn = 0;
- 
-    private GameStatus currentGameStatus=GameStatus.Play;
 
-    const float SpawnDelay = 0.5f;
 
-    public List<Enemy> EnemiesList = new List<Enemy>();
+    public int TotalEscaped
+    {
+        set { _totalEscaped = value; }
+        get { return _totalEscaped; }
+    }
+
+    public int RoundEscaped
+    {
+        set { _roundEscaped = value; }
+        get { return _roundEscaped; }
+    }
+
+    public int TotalKilled
+    {
+        set { _totalKilled = value; }
+        get { return _totalKilled; }
+    }
 
     public int TotalMoney
     {
@@ -46,10 +64,16 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private GameStatus _currentGameStatus = GameStatus.Play;
+
+    const float SpawnDelay = 0.5f;
+
+    public List<Enemy> EnemiesList = new List<Enemy>();
+
+
     void Start()
     {
-      _playButton.gameObject.SetActive(false);
-        StartCoroutine(Spawn());
+        _playButton.gameObject.SetActive(false);
         ShowMenu();
     }
 
@@ -64,9 +88,9 @@ public class GameManager : Singleton<GameManager>
         {
             for (int i = 0; i < _enemiesPerSpawn; i++)
             {
-                if (EnemiesList.Count < _maxEnemiesOnTheScreen)
+                if (EnemiesList.Count < _totalEnemies)
                 {
-                    GameObject newEnemy = Instantiate(_enemies[1]);
+                    GameObject newEnemy = Instantiate(_enemies[0]);
                     newEnemy.transform.position = _spawnPoint.transform.position;
                 }
             }
@@ -107,29 +131,90 @@ public class GameManager : Singleton<GameManager>
         TotalMoney -= amount;
     }
 
+    public void IsWaveOver()
+    {
+        _totalEscapedLbl.text = "Eascaped " + TotalEscaped + "/10";
+        if (RoundEscaped + TotalKilled == _totalEnemies)
+        {
+           
+            SetCurrentGameState();
+            ShowMenu();
+        }
+    }
+
+    private void SetCurrentGameState()
+    {
+        if (TotalEscaped >= 10)
+        {
+            _currentGameStatus = GameStatus.GameOver;
+        }
+        else if (_waveNumber == 0 && TotalKilled + RoundEscaped == 0)
+        {
+            _currentGameStatus = GameStatus.Play;
+        }
+        else if (_waveNumber >= _totalWave)
+        {
+            _currentGameStatus = GameStatus.Win;
+        }
+        else
+        {
+            _currentGameStatus = GameStatus.Next;
+        }
+    }
 
     public void ShowMenu()
     {
-        switch (currentGameStatus)
+        switch (_currentGameStatus)
         {
-                case GameStatus.Play:
-                    _playButtonLbl.text = "Play";
+            case GameStatus.Play:
+                _playButtonLbl.text = "Play";
 
                 break;
-                case GameStatus.Next:
-                    _playButtonLbl.text = "Next Wave";
+            case GameStatus.Next:
+                _playButtonLbl.text = "Next Wave";
 
                 break;
-                case GameStatus.Win:
-                    _playButtonLbl.text = "Play";
+            case GameStatus.Win:
+                _playButtonLbl.text = "Play Again!";
 
                 break;
-                case GameStatus.GameOver:
-                    _playButtonLbl.text = "Play Again!";
-
+            case GameStatus.GameOver:
+                _playButtonLbl.text = "Play Again!";
                 break;
         }
         _playButton.gameObject.SetActive(true);
+    }
+
+    public void PlaybuttonPressed()
+    {
+        switch (_currentGameStatus)
+        {
+            case GameStatus.Next:
+                _waveNumber += 1;
+                _totalEnemies += _waveNumber;
+               
+ 
+                break;
+            default:
+                _totalEnemies = 3;
+                _totalEscaped = 0;
+                TotalMoney = 10;
+                _waveNumber = 0;
+                TowerManager.Instance.RenameTagsBuildSites();
+                TowerManager.Instance.DestroyAllTowers();
+          
+                _totalMoneyLbl.text = TotalMoney.ToString();
+                _totalEscapedLbl.text = "Escaped " + TotalEscaped + "/10";
+                break;
+        }
+          
+        DestoryAllEnemy();
+        TotalKilled = 0;
+        RoundEscaped = 0;
+        _waveNumber += 1;
+       _currentWaveLbl.text = "Wave " + _waveNumber ;
+        StartCoroutine(Spawn());
+        _playButton.gameObject.SetActive(false);
     }
 
     private void HandleEscape()
